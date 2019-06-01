@@ -81,6 +81,6 @@ def S2SDataGenerator(fn, itokens, otokens, batch_size=64, delimiter=' ', max_len
 				Xs = [[], []]
 
 if __name__ == '__main__':
-	itokens, otokens = MakeS2SDict('en2de.s2s.txt', 6, dict_file='en2de_word.txt')
-	X, Y = MakeS2SData('en2de.s2s.txt', itokens, otokens, h5_file='en2de.h5')
+	itokens, otokens = MakeS2SDict('data/en2de.s2s.txt', 6, dict_file='en2de_word.txt')
+	X, Y = MakeS2SData('data/en2de.s2s.txt', itokens, otokens, h5_file='en2de.h5')
 	print(X.shape, Y.shape)

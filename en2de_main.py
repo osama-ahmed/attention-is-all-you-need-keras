@@ -3,9 +3,9 @@ import dataloader as dd
 from keras.optimizers import *
 from keras.callbacks import *
 
-itokens, otokens = dd.MakeS2SDict('data/en2de.s2s.txt', dict_file='data/en2de_word.txt')
-Xtrain, Ytrain = dd.MakeS2SData('data/en2de.s2s.txt', itokens, otokens, h5_file='data/en2de.h5')
-Xvalid, Yvalid = dd.MakeS2SData('data/en2de.s2s.valid.txt', itokens, otokens, h5_file='data/en2de.valid.h5')
+itokens, otokens = dd.MakeS2SDict('data/ara.txt', dict_file='data/ara_word.txt')
+Xtrain, Ytrain = dd.MakeS2SData('data/ara.txt', itokens, otokens, h5_file='data/ara.h5')
+Xvalid, Yvalid = dd.MakeS2SData('data/ara.txt', itokens, otokens, h5_file='data/ara.valid.h5')
 
 print('seq 1 words:', itokens.num())
 print('seq 2 words:', otokens.num())
@@ -21,7 +21,7 @@ s2s.model.fit([Xtrain, Ytrain], None, batch_size=64, epochs=30, validation_data=
 
 from transformer import Transformer, LRSchedulerPerStep, LRSchedulerPerEpoch
 
-d_model = 512
+d_model = 256
 s2s = Transformer(itokens, otokens, len_limit=70, d_model=d_model, d_inner_hid=512, \
 				   n_head=8, d_k=64, d_v=64, layers=2, dropout=0.1)
 
@@ -42,8 +42,8 @@ if 'test' in sys.argv:
 		quest = input('> ')
 		print(s2s.decode_sequence_fast(quest.split(), delimiter=' '))
 		rets = s2s.beam_search(quest.split(), delimiter=' ')
-		for x, y in rets: print(x, y)
+		#for x, y in rets: print(x, y)
 else:
-	s2s.model.fit([Xtrain, Ytrain], None, batch_size=64, epochs=30, \
-				validation_data=([Xvalid, Yvalid], None), \
+	s2s.model.fit([Xtrain, Ytrain], None, batch_size=64, epochs=5, \
+				validation_split=.1, \
 				callbacks=[lr_scheduler, model_saver])
